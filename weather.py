@@ -1,5 +1,4 @@
 import requests
-import json
 
 # WeatherAPI key
 WEATHER_API_KEY = '112dd816c65f421db6b21003260502'  # TODO: Replace with your own WeatherAPI key

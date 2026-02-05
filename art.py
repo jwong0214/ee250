@@ -1,8 +1,7 @@
 import requests
 
-BASE_URL = "https://api.artic.edu/api/v1/artworks/search"
-
 def search_artworks_by_title(title):
+    BASE_URL = "https://api.artic.edu/api/v1/artworks/search"
     params = {
         "q": title,
         "limit": 5,
@@ -11,30 +10,30 @@ def search_artworks_by_title(title):
 
     response = requests.get(BASE_URL, params=params)
 
-    if response.status_code != 200:
-        print(f"Error {response.status_code}")
-        return
+    if response.status_code == 200:
+        results = response.json().get("data", [])
 
-    results = response.json().get("data", [])
+        print(f"\nFiltered results for title containing '{title}':")
+        print("---------------------")
 
-    print(f"\nFiltered results for title containing '{title}':")
-    print("-" * 50)
+        for art in results:
+            artwork_title = art.get("title", "")
 
-    for art in results:
-        artwork_title = art.get("title", "")
-
-        print(f"Title: {artwork_title}")
-        print(f"Artist: {art.get('artist_display', 'N/A')}")
-        print(f"Date: {art.get('date_display', 'N/A')}")
-        print(f"Artwork ID: {art.get('id')}")
-        print("-" * 50)
-        # STRICT title-only filter
-        # if title.lower() in artwork_title.lower():
-        #     print(f"Title: {artwork_title}")
-        #     print(f"Artist: {art.get('artist_display', 'N/A')}")
-        #     print(f"Date: {art.get('date_display', 'N/A')}")
-        #     print(f"Artwork ID: {art.get('id')}")
-        #     print("-" * 50)
+            if title.lower() in artwork_title.lower():
+                print(f"Title: {artwork_title}")
+                print(f"Artist: {art.get('artist_display', 'N/A')}")
+                print(f"Date: {art.get('date_display', 'N/A')}")
+                print(f"Artwork ID: {art.get('id')}")
+                print("---------------------")
+    else:
+        if response.status_code == 400:
+            print(f"Error: 400. Bad request. Check the city name")
+        elif response.status_code == 401:
+            print(f"Error: 401. Unauthorized. Check your API key.")
+        elif response.status_code == 404:
+            print(f"Error: 404. City not found.")
+        else:
+            print(f"Error: {response.status_code}. Something went wrong.")
 
 
 if __name__ == "__main__":
