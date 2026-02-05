@@ -6,7 +6,7 @@ WEATHER_API_KEY = '112dd816c65f421db6b21003260502'  # TODO: Replace with your ow
 
 def get_weather(city):
     # TODO: Build the API request URL using the base API endpoint, the API key, and the city name provided by the user.
-    BASE_URL = "http://api.weatherapi.com/v1"
+    BASE_URL = "http://api.weatherapi.com/v1/current.json"
     params = {
         "key": WEATHER_API_KEY,
         "q": city,
