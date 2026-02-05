@@ -7,12 +7,12 @@ IUCN_API_KEY = 'ovnJDTtdhoKtVwiBgo3ZGQXzKoNkJAAtM5bd'  # TODO: Replace with your
 def get_assessment(scientific_name):
     # TODO: Build the API request URL using the base API endpoint, the API key, and the city name provided by the user.
     BASE_URL = f"https://apiv3.iucnredlist.org/api/v4/taxa/scientific_name/{scientific_name}"
-    params = {
-        "token": IUCN_API_KEY
+    headers = {
+        "X-API-KEY": IUCN_API_KEY
     }
 
     # TODO: Make the HTTP request to fetch weather data using the 'requests' library.
-    response = requests.get(BASE_URL, params=params)
+    response = requests.get(BASE_URL, headers=headers)
 
     # TODO: Handle HTTP status codes:
     # - Check if the status code is 200 (OK), meaning the request was successful.
