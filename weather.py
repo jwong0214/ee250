@@ -10,7 +10,6 @@ def get_weather(city):
     params = {
         "key": WEATHER_API_KEY,
         "q": city,
-
     }
 
     # TODO: Make the HTTP request to fetch weather data using the 'requests' library.
