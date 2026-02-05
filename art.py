@@ -1,47 +1,37 @@
 import requests
-import json
 
 BASE_URL = "https://api.artic.edu/api/v1/artworks/search"
 
-def search_artworks(title):
-    """
-    Searches for artworks by title using the Art Institute of Chicago API.
-    """
-
+def search_artworks_by_title(title):
     params = {
         "q": title,
-        "limit": 5,
-        "query": {
-            "match": {
-                "title" : title
-            }
-        }
+        "limit": 20,
+        "fields": "id,title,artist_display,date_display"
     }
 
     response = requests.get(BASE_URL, params=params)
 
-    if response.status_code == 200:
-        data = response.json()
-        results = data.get("data", [])
+    if response.status_code != 200:
+        print(f"Error {response.status_code}")
+        return
 
-        if not results:
-            print("No artworks found.")
-            return
+    results = response.json().get("data", [])
 
-        print(f"\nSearch results for '{title}':")
-        print("-" * 40)
+    print(f"\nFiltered results for title containing '{title}':")
+    print("-" * 50)
 
-        for art in results:
-            print(f"Title: {art.get('title', 'N/A')}")
+    for art in results:
+        artwork_title = art.get("title", "")
+
+        # STRICT title-only filter
+        if title.lower() in artwork_title.lower():
+            print(f"Title: {artwork_title}")
             print(f"Artist: {art.get('artist_display', 'N/A')}")
             print(f"Date: {art.get('date_display', 'N/A')}")
-            print(f"Artwork ID: {art.get('id', 'N/A')}")
-            print("-" * 40)
-
-    else:
-        print(f"Error {response.status_code}: Unable to fetch artworks.")
+            print(f"Artwork ID: {art.get('id')}")
+            print("-" * 50)
 
 
 if __name__ == "__main__":
-    title = input("Enter artwork title or keyword: ").strip()
-    search_artworks(title)
+    title = input("Enter artwork title: ").strip()
+    search_artworks_by_title(title)
