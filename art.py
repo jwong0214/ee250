@@ -10,7 +10,12 @@ def search_artworks(title):
 
     params = {
         "q": title,
-        "limit": 5   # number of results to return
+        "limit": 5,
+        "query": {
+            "match": {
+                "title" : title
+            }
+        }
     }
 
     response = requests.get(BASE_URL, params=params)
