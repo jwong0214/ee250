@@ -1,51 +1,42 @@
 import requests
 import json
 
-# WeatherAPI key
-IUCN_API_KEY = 'ovnJDTtdhoKtVwiBgo3ZGQXzKoNkJAAtM5bd'  # TODO: Replace with your own WeatherAPI key
+BASE_URL = "https://api.artic.edu/api/v1/artworks/search"
 
-def get_assessment(scientific_name):
-    # TODO: Build the API request URL using the base API endpoint, the API key, and the city name provided by the user.
-    BASE_URL = f"https://api.iucnredlist.org/api/v4/taxa/scientific_name/{scientific_name}"
-    headers = {
-        "X-API-KEY": IUCN_API_KEY
+def search_artworks(title):
+    """
+    Searches for artworks by title using the Art Institute of Chicago API.
+    """
+
+    params = {
+        "q": title,
+        "limit": 5   # number of results to return
     }
 
-    # TODO: Make the HTTP request to fetch weather data using the 'requests' library.
-    response = requests.get(BASE_URL, headers=headers)
+    response = requests.get(BASE_URL, params=params)
 
-    # TODO: Handle HTTP status codes:
-    # - Check if the status code is 200 (OK), meaning the request was successful.
-    # - If not 200, handle common errors like 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), and any other relevant codes.
     if response.status_code == 200:
         data = response.json()
+        results = data.get("data", [])
 
-        if not data["result"]:
-            print("No assessments found for this scientific name.")
+        if not results:
+            print("No artworks found.")
             return
 
-        # Print latest assessment (first result)
-        assessment = data["result"][0]
+        print(f"\nSearch results for '{title}':")
+        print("-" * 40)
 
-        print(f"Scientific Name: {assessment.get('scientific_name', 'N/A')}")
-        print(f"Red List Category: {assessment.get('red_list_category', 'N/A')}")
-        print(f"Population Trend: {assessment.get('population_trend', 'N/A')}")
-        print(f"Assessment Year: {assessment.get('year', 'N/A')}")
+        for art in results:
+            print(f"Title: {art.get('title', 'N/A')}")
+            print(f"Artist: {art.get('artist_display', 'N/A')}")
+            print(f"Date: {art.get('date_display', 'N/A')}")
+            print(f"Artwork ID: {art.get('id', 'N/A')}")
+            print("-" * 40)
 
     else:
-        # TODO: Implement error handling for common status codes. Provide meaningful error messages based on the status code.
-        if response.status_code == 400:
-            print(f"Error: 400. Bad request.")
-        elif response.status_code == 401:
-            print(f"Error: 401. Unauthorized. Check your API key.")
-        elif response.status_code == 404:
-            print(f"Error: 404. Scientific name not found.")
-        else:
-            print(f"Error: {response.status_code}. Something went wrong.")
+        print(f"Error {response.status_code}: Unable to fetch artworks.")
 
-if __name__ == '__main__':
-    # TODO: Prompt the user to input a city name.
-    scientific_name = input("Enter a scientific name: ")
 
-    # TODO: Call the 'get_weather' function with the city name provided by the user.
-    get_assessment(scientific_name)
+if __name__ == "__main__":
+    title = input("Enter artwork title or keyword: ").strip()
+    search_artworks(title)
