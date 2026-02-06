@@ -15,7 +15,7 @@ def main():
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    server_ip = "localhost"
+    server_ip = 192.169.0.141
     server_port = 5000
     client_socket.connect((server_ip, server_port))
 
