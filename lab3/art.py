@@ -27,11 +27,9 @@ def search_artworks_by_title(title):
                 print("---------------------")
     else:
         if response.status_code == 400:
-            print(f"Error: 400. Bad request. Check the city name")
-        elif response.status_code == 401:
-            print(f"Error: 401. Unauthorized. Check your API key.")
+            print(f"Error: 400. Bad request. Check the artwork name")
         elif response.status_code == 404:
-            print(f"Error: 404. City not found.")
+            print(f"Error: 404. Artwork not found.")
         else:
             print(f"Error: {response.status_code}. Something went wrong.")
 
